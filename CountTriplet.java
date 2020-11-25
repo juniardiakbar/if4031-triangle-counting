@@ -31,20 +31,27 @@ public class CountTriplet extends Configured implements Tool {
     public static class FirstReducer extends Reducer<LongWritable, LongWritable, Text, Text> {
         public void reduce(LongWritable key, Iterable<LongWritable> values, Context context)
                 throws IOException, InterruptedException {
-            Iterator<Long> valuesIt = values.iterator();
             for (LongWritable u : values) {
                 context.write(new Text(key.toString() + ',' + u.toString()), new Text("$"));
             }
-            for (Iterator<Long> u = valuesIt; u.hasNext(); ) {
-                Long uVal = u.next();
-                for (Iterator<Long> w = u; w.hasNext(); ) {
-                    Long wVal = w.next();
-                    if (uVal < wVal) {
-                        context.write(new Text(uVal.toString() + ',' + wVal.toString()), new Text(key.toString()));
-                    } else if (uVal > wVal) {
-			            context.write(new Text(wVal.toString() + ',' + uVal.toString()), new Text(key.toString()));
-        	        }
+
+            long lastIndex = 0;
+
+            for (LongWritable u : values) {
+                long currentIndex = 0;
+                for (LongWritable w : values) {
+                    if (currentIndex < lastIndex) {
+                        currentIndex++;
+                    } else {
+                        int compare = valuesCopy.get(u).compareTo(valuesCopy.get(w));
+                        if (compare < 0) {
+                            context.write(new Text(valuesCopy.get(u).toString() + ',' + valuesCopy.get(w).toString()), new Text(key.toString()));
+                        } else if (compare > 0) {
+                            context.write(new Text(valuesCopy.get(w).toString() + ',' + valuesCopy.get(u).toString()), new Text(key.toString()));
+                        }
+                    }
 		        }
+                lastIndex++;
             }
         }
     }

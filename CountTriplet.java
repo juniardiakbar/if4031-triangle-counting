@@ -39,7 +39,7 @@ public class CountTriplet extends Configured implements Tool {
             System.out.println("start " + key.get() + " --- ");
             for (int u = 0; u < valuesCopy.size(); ++u) {
                 if (u % 10000 == 0) {
-                    System.out.println(" - current: " + u)
+                    System.out.println(" - current: " + u);
                 }
                 for (int w = u; w < valuesCopy.size(); ++w) {
                     int compare = valuesCopy.get(u).compareTo(valuesCopy.get(w));

@@ -31,27 +31,24 @@ public class CountTriplet extends Configured implements Tool {
     public static class FirstReducer extends Reducer<LongWritable, LongWritable, Text, Text> {
         public void reduce(LongWritable key, Iterable<LongWritable> values, Context context)
                 throws IOException, InterruptedException {
+            ArrayList<Long> valuesCopy = new ArrayList<Long>();
             for (LongWritable u : values) {
+                valuesCopy.add(u.get());
                 context.write(new Text(key.toString() + ',' + u.toString()), new Text("$"));
             }
-
-            long lastIndex = 0;
-
-            for (LongWritable u : values) {
-                long currentIndex = 0;
-                for (LongWritable w : values) {
-                    if (currentIndex < lastIndex) {
-                        currentIndex++;
-                    } else {
-                        int compare = valuesCopy.get(u).compareTo(valuesCopy.get(w));
-                        if (compare < 0) {
-                            context.write(new Text(valuesCopy.get(u).toString() + ',' + valuesCopy.get(w).toString()), new Text(key.toString()));
-                        } else if (compare > 0) {
-                            context.write(new Text(valuesCopy.get(w).toString() + ',' + valuesCopy.get(u).toString()), new Text(key.toString()));
-                        }
-                    }
+            System.out.println("start " + key.get() + " --- ");
+            for (int u = 0; u < valuesCopy.size(); ++u) {
+                if (u % 10000 == 0) {
+                    System.out.println(" - current: " + u)
+                }
+                for (int w = u; w < valuesCopy.size(); ++w) {
+                    int compare = valuesCopy.get(u).compareTo(valuesCopy.get(w));
+                    if (compare < 0) {
+                        context.write(new Text(valuesCopy.get(u).toString() + ',' + valuesCopy.get(w).toString()), new Text(key.toString()));
+                    } else if (compare > 0) {
+			            context.write(new Text(valuesCopy.get(w).toString() + ',' + valuesCopy.get(u).toString()), new Text(key.toString()));
+        	        }
 		        }
-                lastIndex++;
             }
         }
     }

@@ -31,24 +31,27 @@ public class CountTriplet extends Configured implements Tool {
     public static class FirstReducer extends Reducer<LongWritable, LongWritable, Text, Text> {
         public void reduce(LongWritable key, Iterable<LongWritable> values, Context context)
                 throws IOException, InterruptedException {
-            ArrayList<Long> valuesCopy = new ArrayList<Long>();
+            LinkedHashSet<Integer> valuesCopy = new LinkedHashSet<Integer>();
             for (LongWritable u : values) {
                 valuesCopy.add(u.get());
                 context.write(new Text(key.toString() + ',' + u.toString()), new Text("$"));
             }
-            System.out.println("start " + key.get() + " --- ");
-            for (int u = 0; u < valuesCopy.size(); ++u) {
-                if (u % 10000 == 0) {
-                    System.out.println(" - current: " + u);
-                }
-                for (int w = u; w < valuesCopy.size(); ++w) {
-                    int compare = valuesCopy.get(u).compareTo(valuesCopy.get(w));
-                    if (compare < 0) {
-                        context.write(new Text(valuesCopy.get(u).toString() + ',' + valuesCopy.get(w).toString()), new Text(key.toString()));
-                    } else if (compare > 0) {
-			            context.write(new Text(valuesCopy.get(w).toString() + ',' + valuesCopy.get(u).toString()), new Text(key.toString()));
-        	        }
+            int lastIndex = 0;
+            for (Integer u : valuesCopy) {
+                int index = 0;
+                for (Integer w : valuesCopy) {
+                    if (index < lastIndex) {
+                        index++;
+                    } else {
+                        int compare = u.compareTo(w);
+                        if (compare < 0) {
+                            context.write(new Text(u.toString() + ',' + w.toString()), new Text(key.toString()));
+                        } else if (compare > 0) {
+                            context.write(new Text(w.toString() + ',' + u.toString()), new Text(key.toString()));
+                        }
+                    }
 		        }
+                lastIndex++;
             }
         }
     }

@@ -33,7 +33,7 @@ public class CountTriplet extends Configured implements Tool {
                 throws IOException, InterruptedException {
             LinkedHashSet<Integer> valuesCopy = new LinkedHashSet<Integer>();
             for (LongWritable u : values) {
-                valuesCopy.add(u.get());
+                valuesCopy.add((int) u.get());
                 context.write(new Text(key.toString() + ',' + u.toString()), new Text("$"));
             }
             int lastIndex = 0;

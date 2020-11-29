@@ -81,7 +81,7 @@ public class CountDegree extends Configured implements Tool {
         jobOne.setOutputKeyClass(LongWritable.class);
         jobOne.setOutputValueClass(Text.class);
 
-        jobOne.setJarByClass(CountTriplet.class);
+        jobOne.setJarByClass(CountDegree.class);
         jobOne.setMapperClass(FirstMapper.class);
         jobOne.setReducerClass(FirstReducer.class);
 
@@ -97,7 +97,7 @@ public class CountDegree extends Configured implements Tool {
         jobTwo.setOutputKeyClass(LongWritable.class);
         jobTwo.setOutputValueClass(Text.class);
 
-        jobTwo.setJarByClass(CountTriplet.class);
+        jobTwo.setJarByClass(CountDegree.class);
         jobTwo.setMapperClass(SecondMapper.class);
         jobTwo.setReducerClass(SecondReducer.class);
 

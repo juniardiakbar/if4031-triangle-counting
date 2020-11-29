@@ -58,16 +58,18 @@ public class CountDegree extends Configured implements Tool {
         public void reduce(LongWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             // v u du --> u v du dv
             Long v = key.get();
-            ArrayList<Text> valuesCopy = new ArrayList<Text>();
+            ArrayList<String> valuesCopy = new ArrayList<String>();
             for (Text text : values) {
-                valuesCopy.add(text);
+                valuesCopy.add(text.toString());
             }
-            for (Text text : valuesCopy) {                
-                String[] pair = text.toString().split("\\s+");
-                Long u = Long.parseLong(pair[0]);
-                Long du = Long.parseLong(pair[1]);
+            for (String text : valuesCopy) {                
+                String[] pair = text.split("\\s+");
+                if (pair.length > 1){
+                    Long u = Long.parseLong(pair[0]);
+                    Long du = Long.parseLong(pair[1]);
 
-                context.write(new LongWritable(u), new Text("" + v + " " + du + " " + valuesCopy.size()));
+                    context.write(new LongWritable(u), new Text("" + v + " " + du + " " + valuesCopy.size()));
+                }
             }
         }
     }

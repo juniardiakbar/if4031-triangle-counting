@@ -66,7 +66,7 @@ public class CountDegree extends Configured implements Tool {
                 Long u = Long.parseLong(pair[0]);
                 Long du = Long.parseLong(pair[1]);
 
-                context.write(new LongWritable(u), new Text(key.get().toString() + " " + du + " " + valuesCopy.size());
+                context.write(new LongWritable(u), new Text(key.get() + " " + du + " " + valuesCopy.size()));
             }
         }
     }

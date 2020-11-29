@@ -35,6 +35,7 @@ public class CountTriplet extends Configured implements Tool {
             for (LongWritable u : values) {
                 valuesCopy.add((int) u.get());
                 context.write(new Text(key.toString() + ',' + u.toString()), new Text("$"));
+                context.write(new Text(u.toString() + ',' + key.toString()), new Text("$"));
             }
             int lastIndex = 0;
             for (Integer u : valuesCopy) {

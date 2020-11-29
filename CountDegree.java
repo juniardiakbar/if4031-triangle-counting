@@ -57,6 +57,7 @@ public class CountDegree extends Configured implements Tool {
     public static class SecondReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
         public void reduce(LongWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             // v u du --> u v du dv
+            Long v = key.get();
             ArrayList<Text> valuesCopy = new ArrayList<Text>();
             for (Text text : values) {
                 valuesCopy.add(text);
@@ -66,7 +67,7 @@ public class CountDegree extends Configured implements Tool {
                 Long u = Long.parseLong(pair[0]);
                 Long du = Long.parseLong(pair[1]);
 
-                context.write(new LongWritable(u), new Text(key.get() + " " + du + " " + valuesCopy.size()));
+                context.write(new LongWritable(u), new Text("" + v + " " + du + " " + valuesCopy.size()));
             }
         }
     }

@@ -15,7 +15,7 @@ public class CountTriplet extends Configured implements Tool {
     public static class FirstMapper extends Mapper<LongWritable, Text, LongWritable, LongWritable> {
         public void map(LongWritable key, Text text, Context context) throws IOException, InterruptedException {
             String[] pair = text.toString().split("\\s+");
-            if (pair.length > 1) { // if edge is valid
+            if (pair.length > 3) { // if edge is valid
                 long u = Long.parseLong(pair[0]);
                 long v = Long.parseLong(pair[1]);
                 long du = Long.parseLong(pair[2]);

@@ -18,11 +18,11 @@ public class CountTriplet extends Configured implements Tool {
             if (pair.length > 1) { // if edge is valid
                 long u = Long.parseLong(pair[0]);
                 long v = Long.parseLong(pair[1]);
+                long du = Long.parseLong(pair[2]);
+                long dv = Long.parseLong(pair[3]);
 
-                if (u < v) {
+                if ((du < dv) || ((du == dv) && u < v)) {
                     context.write(new LongWritable(u), new LongWritable(v));
-                } else {
-                    context.write(new LongWritable(v), new LongWritable(u));
                 }
             }
         }
